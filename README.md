@@ -52,6 +52,20 @@ cravler_max_mind_geo_ip:
 app/console cravler:maxmind:geoip-update
 ```
 
+## How to use
+
+``` php
+$geoIpService = $container->get('cravler_max_mind_geo_ip.service.geo_ip_service');
+
+// Replace "city" with the appropriate method for your database, e.g., "country".
+$record = $geoIpService->getRecord('128.101.101.101', 'city');
+
+print($record->country->isoCode . "\n"); // 'US'
+print($record->country->name . "\n"); // 'United States'
+print($record->city->name . "\n"); // 'Minneapolis'
+
+```
+
 ## License
 
 This bundle is under the MIT license. See the complete license in the bundle:
