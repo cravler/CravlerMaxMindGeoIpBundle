@@ -23,5 +23,21 @@
     "autoload": {
         "psr-0": { "Cravler\\MaxMindGeoIpBundle": "" }
     },
-    "target-dir": "Cravler/MaxMindGeoIpBundle"
+    "target-dir": "Cravler/MaxMindGeoIpBundle",
+    "extra": {
+        "branch-alias": {
+            "dev-master": "1.0-dev"
+        },
+        "modera-module": {
+            "register-bundle": "Cravler\\MaxMindGeoIpBundle\\CravlerMaxMindGeoIpBundle",
+            "scripts": {
+                "post-package-install": [
+                    "Cravler\\MaxMindGeoIpBundle\\Composer\\ScriptHandler::maxMindGeoIpUpdate"
+                ],
+                "post-package-update": [
+                    "Cravler\\MaxMindGeoIpBundle\\Composer\\ScriptHandler::maxMindGeoIpUpdate"
+                ]
+            }
+        }
+    }
 }
