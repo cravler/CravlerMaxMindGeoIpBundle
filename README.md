@@ -31,17 +31,23 @@ The default configuration for the bundle looks like this:
 
 ``` yaml
 cravler_max_mind_geo_ip:
+    client:
+        user_id: ~
+        license_key: ~
+        options: {}
     path: '%kernel.root_dir%/Resources/MaxMind'
     db:
         country: 'GeoIP2-Country.mmdb'
         city: 'GeoIP2-City.mmdb'
         connection_type: 'GeoIP2-Connection-Type.mmdb'
+        anonymous_ip: 'GeoIP2-Anonymous-IP.mmdb'
         domain: 'GeoIP2-Domain.mmdb'
         isp: 'GeoIP2-ISP.mmdb'
     source:
         country: 'http://geolite.maxmind.com/download/geoip/database/GeoLite2-Country.mmdb.gz'
         city: 'http://geolite.maxmind.com/download/geoip/database/GeoLite2-City.mmdb.gz'
         connection_type: ~
+        anonymous_ip: ~
         domain: ~
         isp: ~
 ```

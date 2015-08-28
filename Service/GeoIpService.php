@@ -4,9 +4,12 @@ namespace Cravler\MaxMindGeoIpBundle\Service;
 
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Cravler\MaxMindGeoIpBundle\DependencyInjection\CravlerMaxMindGeoIpExtension;
+use GeoIp2\WebService\Client;
 use GeoIp2\Database\Reader;
 use GeoIp2\Model\City;
 use GeoIp2\Model\Country;
+use GeoIp2\Model\Insights;
+use GeoIp2\Model\AnonymousIp;
 use GeoIp2\Model\ConnectionType;
 use GeoIp2\Model\Domain;
 use GeoIp2\Model\Isp;
@@ -30,11 +33,30 @@ class GeoIpService
     }
 
     /**
+     * @param array $locales
+     * @return Client
+     */
+    public function getClient($locales = array('en'))
+    {
+        return new Client(
+            $this->config['client']['user_id'],
+            $this->config['client']['license_key'],
+            $locales,
+            $this->config['client']['options'] ?: array()
+        );
+    }
+
+    /**
      * @param string $type
+     * @param array $locales
      * @return Reader
      */
     public function getReader($type = 'country', $locales = array('en'))
     {
+        $type = preg_replace_callback('/([A-Z])/', function($match) {
+            return '_' . strtolower($match[1]);
+        }, $type);
+
         if (!isset($this->config['db'][$type])) {
             throw new \RuntimeException(sprintf('Unknown database type %s', $type));
         }
@@ -42,32 +64,34 @@ class GeoIpService
     }
 
     /**
+     * *
      * @param string $ipAddress
      * @param string $type
-     * @param array $locales
-     * @return City|Country|ConnectionType|Domain|Isp
+     * @param array $options
+     * @return City|Country|ConnectionType|Domain|Isp|AnonymousIp|Insights
+     * @throws \Exception
      */
-    public function getRecord($ipAddress, $type = 'country', $locales = array('en'))
+    public function getRecord($ipAddress = 'me', $type = 'country', array $options = array())
     {
-        $reader = $this->getReader($type, $locales);
-        switch ($type) {
-            case 'country':
-                $record = $reader->country($ipAddress);
-                break;
-            case 'city':
-                $record = $reader->city($ipAddress);
-                break;
-            case 'connection_type':
-                $record = $reader->connectionType($ipAddress);
-                break;
-            case 'domain':
-                $record = $reader->domain($ipAddress);
-                break;
-            case 'isp':
-                $record = $reader->isp($ipAddress);
-                break;
+        $provider = isset($options['provider']) ? $options['provider'] : 'reader';
+        $locales  = isset($options['locales'])  ? $options['locales']  : array('en');
+
+        if ('client' == $provider) {
+            $provider = $this->getClient($locales);
+        } else {
+            $provider = $this->getReader($type, $locales);
         }
 
-        return $record;
+        $method = preg_replace_callback('/_([a-z])/', function($match) {
+            return strtoupper($match[1]);
+        }, $type);
+
+        if (!method_exists($provider, $method)) {
+            throw new \Exception(
+                sprintf('The method "%s" does not exist for %s', $method, get_class($provider))
+            );
+        }
+
+        return $provider->{$method}($ipAddress);
     }
 }
