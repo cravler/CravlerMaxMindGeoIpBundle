@@ -1,6 +1,10 @@
 CravlerMaxMindGeoIpBundle
 ======================
 
+## Requirements
+
+This bundle works with version of Symfony > 2.3.
+
 ## Installation
 
 ### Step 1: update your vendors by running
