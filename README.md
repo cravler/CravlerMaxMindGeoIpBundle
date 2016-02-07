@@ -55,7 +55,12 @@ cravler_max_mind_geo_ip:
 ## Download and update the MaxMind GeoIp2 database
 
 ``` bash
-app/console cravler:maxmind:geoip-update
+php app/console cravler:maxmind:geoip-update
+```
+
+You can use the *--no-md5-check* option if you want to skip MD5 check.
+``` bash
+php app/console cravler:maxmind:geoip-update --no-md5-check
 ```
 
 ## How to use
