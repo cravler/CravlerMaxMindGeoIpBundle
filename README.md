@@ -51,6 +51,21 @@ cravler_max_mind_geo_ip:
         domain: ~
         isp: ~
 ```
+If you have bought a licence, fill your user_id and licence_key and fill source URL in config.yml. Example :
+```
+cravler_max_mind_geo_ip:
+    client:
+        user_id: 123456
+        license_key: abcd1234
+    source:
+        country: 'https://download.maxmind.com/app/geoip_download?edition_id=GeoIP2-Country&suffix=tar.gz&license_key=abcd1234'
+        city: null
+```
+Do not forget to change your licence key in URL source.
+You can find links in Maxmind website in your setting 'manualy update'.
+
+YOU MUST USE *--no-md5-check* WHEN YOU CHANGE SOURCE URL
+
 
 ## Download and update the MaxMind GeoIp2 database
 
