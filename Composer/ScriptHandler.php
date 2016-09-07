@@ -20,16 +20,16 @@ class ScriptHandler
         $appDir = $options['symfony-app-dir'];
 
         if (!is_dir($appDir)) {
-            echo 'The symfony-app-dir ('.$appDir.') specified in composer.json was not found in ' . getcwd() . ', can not update schema.' . PHP_EOL;
+            echo 'The symfony-app-dir ('.$appDir.') specified in composer.json was not found in '.getcwd().', can not update schema.'.PHP_EOL;
 
             return;
         }
 
-        echo '>>> CravlerMaxMindGeoIpBundle: Running command "cravler:maxmind:geoip-update"' . PHP_EOL;
+        echo '>>> CravlerMaxMindGeoIpBundle: Running command "cravler:maxmind:geoip-update"'.PHP_EOL;
 
         static::executeCommand($event, $appDir, 'cravler:maxmind:geoip-update', $options['process-timeout']);
 
-        echo '>>> CravlerMaxMindGeoIpBundle: done' . PHP_EOL;
+        echo '>>> CravlerMaxMindGeoIpBundle: done'.PHP_EOL;
     }
 
     /**
@@ -37,12 +37,13 @@ class ScriptHandler
      * @param $appDir
      * @param $cmd
      * @param int $timeout
+     *
      * @throws \RuntimeException
      */
     protected static function executeCommand(Event $event, $appDir, $cmd, $timeout = 300)
     {
         $php = escapeshellarg(static::getPhp());
-        $console = escapeshellarg($appDir . '/console');
+        $console = escapeshellarg($appDir.'/console');
         if ($event->getIO()->isDecorated()) {
             $console .= ' --ansi';
         }
@@ -56,6 +57,7 @@ class ScriptHandler
 
     /**
      * @param Event $event
+     *
      * @return array
      */
     protected static function getOptions(Event $event)
@@ -71,11 +73,12 @@ class ScriptHandler
 
     /**
      * @return false|string
+     *
      * @throws \RuntimeException
      */
     protected static function getPhp()
     {
-        $phpFinder = new PhpExecutableFinder;
+        $phpFinder = new PhpExecutableFinder();
         if (!$phpPath = $phpFinder->find()) {
             throw new \RuntimeException('The php executable could not be found, add it to your PATH environment variable and try again');
         }

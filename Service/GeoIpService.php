@@ -34,6 +34,7 @@ class GeoIpService
 
     /**
      * @param array $locales
+     *
      * @return Client
      */
     public function getClient($locales = array('en'))
@@ -48,33 +49,38 @@ class GeoIpService
 
     /**
      * @param string $type
-     * @param array $locales
+     * @param array  $locales
+     *
      * @return Reader
      */
     public function getReader($type = 'country', $locales = array('en'))
     {
-        $type = preg_replace_callback('/([A-Z])/', function($match) {
-            return '_' . strtolower($match[1]);
+        $type = preg_replace_callback('/([A-Z])/', function ($match) {
+            return '_'.strtolower($match[1]);
         }, $type);
 
         if (!isset($this->config['db'][$type])) {
             throw new \RuntimeException(sprintf('Unknown database type %s', $type));
         }
-        return new Reader($this->config['path'] . '/' . $this->config['db'][$type], $locales);
+
+        return new Reader($this->config['path'].'/'.$this->config['db'][$type], $locales);
     }
 
     /**
-     * *
+     * *.
+     *
      * @param string $ipAddress
      * @param string $type
-     * @param array $options
+     * @param array  $options
+     *
      * @return City|Country|ConnectionType|Domain|Isp|AnonymousIp|Insights
+     *
      * @throws \Exception
      */
     public function getRecord($ipAddress = 'me', $type = 'country', array $options = array())
     {
         $provider = isset($options['provider']) ? $options['provider'] : 'reader';
-        $locales  = isset($options['locales'])  ? $options['locales']  : array('en');
+        $locales = isset($options['locales']) ? $options['locales'] : array('en');
 
         if ('client' == $provider) {
             $provider = $this->getClient($locales);
@@ -82,7 +88,7 @@ class GeoIpService
             $provider = $this->getReader($type, $locales);
         }
 
-        $method = preg_replace_callback('/_([a-z])/', function($match) {
+        $method = preg_replace_callback('/_([a-z])/', function ($match) {
             return strtoupper($match[1]);
         }, $type);
 

@@ -6,14 +6,14 @@ use Symfony\Component\Config\Definition\Builder\TreeBuilder;
 use Symfony\Component\Config\Definition\ConfigurationInterface;
 
 /**
- * This is the class that validates and merges configuration from your app/config files
+ * This is the class that validates and merges configuration from your app/config files.
  *
  * To learn more see {@link http://symfony.com/doc/current/cookbook/bundles/extension.html#cookbook-bundles-extension-config-class}
  */
 class Configuration implements ConfigurationInterface
 {
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function getConfigTreeBuilder()
     {
@@ -66,6 +66,10 @@ class Configuration implements ConfigurationInterface
                             ->cannotBeEmpty()
                             ->defaultValue('GeoIP2-Anonymous-IP.mmdb')
                         ->end()
+                        ->scalarNode('enterprise')
+                            ->cannotBeEmpty()
+                            ->defaultValue('GeoIP2-Enterprise.mmdb')
+                        ->end()
                     ->end()
                 ->end()
                 ->arrayNode('source')
@@ -87,6 +91,35 @@ class Configuration implements ConfigurationInterface
                             ->defaultValue(null)
                         ->end()
                         ->scalarNode('anonymous_ip')
+                            ->defaultValue(null)
+                        ->end()
+                        ->scalarNode('enterprise')
+                            ->defaultValue(null)
+                        ->end()
+                    ->end()
+                ->end()
+                ->arrayNode('md5_check')
+                    ->addDefaultsIfNotSet()
+                    ->children()
+                        ->scalarNode('country')
+                            ->defaultValue('http://geolite.maxmind.com/download/geoip/database/GeoLite2-Country.md5')
+                        ->end()
+                        ->scalarNode('city')
+                            ->defaultValue('http://geolite.maxmind.com/download/geoip/database/GeoLite2-City.md5')
+                        ->end()
+                        ->scalarNode('connection_type')
+                            ->defaultValue(null)
+                        ->end()
+                        ->scalarNode('domain')
+                            ->defaultValue(null)
+                        ->end()
+                        ->scalarNode('isp')
+                            ->defaultValue(null)
+                        ->end()
+                        ->scalarNode('anonymous_ip')
+                            ->defaultValue(null)
+                        ->end()
+                        ->scalarNode('enterprise')
                             ->defaultValue(null)
                         ->end()
                     ->end()
