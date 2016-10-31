@@ -45,16 +45,16 @@ cravler_max_mind_geo_ip:
         domain: 'GeoIP2-Domain.mmdb'
         isp: 'GeoIP2-ISP.mmdb'
     source:
-        country: 'http://geolite.maxmind.com/download/geoip/database/GeoLite2-Country.mmdb.gz'
-        city: 'http://geolite.maxmind.com/download/geoip/database/GeoLite2-City.mmdb.gz'
+        country: 'https://geolite.maxmind.com/download/geoip/database/GeoLite2-Country.mmdb.gz'
+        city: 'https://geolite.maxmind.com/download/geoip/database/GeoLite2-City.mmdb.gz'
         connection_type: ~
         anonymous_ip: ~
         enterprise: ~
         domain: ~
         isp: ~
     md5_check:
-        country: 'http://geolite.maxmind.com/download/geoip/database/GeoLite2-Country.md5'
-        city: 'http://geolite.maxmind.com/download/geoip/database/GeoLite2-City.md5'
+        country: 'https://geolite.maxmind.com/download/geoip/database/GeoLite2-Country.md5'
+        city: 'https://geolite.maxmind.com/download/geoip/database/GeoLite2-City.md5'
         connection_type: ~
         anonymous_ip: ~
         enterprise: ~
