@@ -82,14 +82,17 @@ cravler_max_mind_geo_ip:
 
 ## Download and update the MaxMind GeoIp2 database
 
+
 ``` bash
-php app/console cravler:maxmind:geoip-update
+php bin/console cravler:maxmind:geoip-update
 ```
 
 You can use the *--no-md5-check* option if you want to skip MD5 check.
 ``` bash
-php app/console cravler:maxmind:geoip-update --no-md5-check
+php bin/console cravler:maxmind:geoip-update --no-md5-check
 ```
+
+> On Symfony 2.8 or older use `app/console` instead of `bin/console`
 
 ## How to use
 
