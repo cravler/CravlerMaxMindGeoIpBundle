@@ -25,11 +25,12 @@ class GeoIpService
     private $config = array();
 
     /**
-     * @param ContainerInterface $container
+     * GeoIpService constructor.
+     * @param array $config
      */
-    public function __construct(ContainerInterface $container)
+    public function __construct(array $config)
     {
-        $this->config = $container->getParameter(CravlerMaxMindGeoIpExtension::CONFIG_KEY);
+        $this->config = $config;
     }
 
     /**

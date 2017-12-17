@@ -23,10 +23,11 @@ class CravlerMaxMindGeoIpExtension extends Extension
     {
         $configuration = new Configuration();
         $config = $this->processConfiguration($configuration, $configs);
-
-        $container->setParameter(self::CONFIG_KEY, $config);
+        $container->setParameter(self::CONFIG_KEY, $config); // BC
 
         $loader = new Loader\XmlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
         $loader->load('services.xml');
+
+        $container->findDefinition('cravler_max_mind_geo_ip.service.geo_ip_service')->setArguments(array($config));
     }
 }
