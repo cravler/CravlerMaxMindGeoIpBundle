@@ -6,6 +6,7 @@
 
     <services>
         <service id="cravler_max_mind_geo_ip.service.geo_ip_service"
+                 public="true"
                  class="Cravler\MaxMindGeoIpBundle\Service\GeoIpService">
         </service>
     </services>
