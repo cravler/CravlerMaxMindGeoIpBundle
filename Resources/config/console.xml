@@ -5,10 +5,10 @@
            xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
 
     <services>
-        <service id="cravler_max_mind_geo_ip.service.geo_ip_service"
-                 public="true"
-                 class="Cravler\MaxMindGeoIpBundle\Service\GeoIpService">
-        </service>
+        <defaults public="false" />
+        <prototype namespace="Cravler\MaxMindGeoIpBundle\Command\" resource="../../Command/*">
+            <tag name="console.command" />
+        </prototype>
     </services>
 
 </container>

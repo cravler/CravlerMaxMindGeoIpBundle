@@ -29,5 +29,9 @@ class CravlerMaxMindGeoIpExtension extends Extension
         $loader->load('services.xml');
 
         $container->findDefinition('cravler_max_mind_geo_ip.service.geo_ip_service')->setArguments(array($config));
+
+        try {
+            $loader->load('console.xml');
+        } catch (\Exception $e) {}
     }
 }
