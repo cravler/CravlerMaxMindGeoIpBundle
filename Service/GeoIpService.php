@@ -2,8 +2,6 @@
 
 namespace Cravler\MaxMindGeoIpBundle\Service;
 
-use Symfony\Component\DependencyInjection\ContainerInterface;
-use Cravler\MaxMindGeoIpBundle\DependencyInjection\CravlerMaxMindGeoIpExtension;
 use GeoIp2\WebService\Client;
 use GeoIp2\Database\Reader;
 use GeoIp2\Model\City;
