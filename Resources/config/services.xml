@@ -9,6 +9,8 @@
                  public="true"
                  class="Cravler\MaxMindGeoIpBundle\Service\GeoIpService">
         </service>
+               
+        <service id="Cravler\MaxMindGeoIpBundle\Service\GeoIpService" alias="cravler_max_mind_geo_ip.service.geo_ip_service" />
     </services>
 
 </container>
