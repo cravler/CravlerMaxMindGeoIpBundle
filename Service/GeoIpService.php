@@ -11,6 +11,7 @@ use GeoIp2\Model\AnonymousIp;
 use GeoIp2\Model\ConnectionType;
 use GeoIp2\Model\Domain;
 use GeoIp2\Model\Isp;
+use GeoIp2\Model\Asn;
 
 /**
  * @author Sergei Vizel <sergei.vizel@gmail.com>
@@ -72,7 +73,7 @@ class GeoIpService
      * @param string $type
      * @param array  $options
      *
-     * @return City|Country|ConnectionType|Domain|Isp|AnonymousIp|Insights
+     * @return City|Country|ConnectionType|Domain|Isp|AnonymousIp|Insights|Asn
      *
      * @throws \Exception
      */
