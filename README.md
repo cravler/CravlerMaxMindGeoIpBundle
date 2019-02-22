@@ -43,6 +43,7 @@ cravler_max_mind_geo_ip:
         enterprise: 'GeoIP2-Enterprise'
         domain: 'GeoIP2-Domain.mmdb'
         isp: 'GeoIP2-ISP.mmdb'
+        asn: 'GeoIP2-ASN.mmdb'
     source:
         country: 'https://geolite.maxmind.com/download/geoip/database/GeoLite2-Country.mmdb.gz'
         city: 'https://geolite.maxmind.com/download/geoip/database/GeoLite2-City.mmdb.gz'
@@ -51,6 +52,7 @@ cravler_max_mind_geo_ip:
         enterprise: ~
         domain: ~
         isp: ~
+        asn: 'https://geolite.maxmind.com/download/geoip/database/GeoLite2-ASN.tar.gz'
     md5_check:
         country: 'https://geolite.maxmind.com/download/geoip/database/GeoLite2-Country.md5'
         city: 'https://geolite.maxmind.com/download/geoip/database/GeoLite2-City.md5'
@@ -59,6 +61,7 @@ cravler_max_mind_geo_ip:
         enterprise: ~
         domain: ~
         isp: ~
+        asn: ~
 ```
 
 If you have bought a licence.
