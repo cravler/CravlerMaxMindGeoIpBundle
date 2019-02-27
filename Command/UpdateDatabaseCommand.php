@@ -52,6 +52,15 @@ class UpdateDatabaseCommand extends ContainerAwareCommand
             $tmpFileUnzipped = dirname($tmpFile).DIRECTORY_SEPARATOR.$config['db'][$key];
 
             $success = $this->decompressFile($tmpFile, $tmpFileUnzipped);
+
+            if (!$input->getOption('no-md5-check')) {
+                if (strpos($tmpFile, '.tar.gz') !== false) {
+                    $calculatedMD5 = md5_file($tmpFile);
+                } else {
+                    $calculatedMD5 = md5_file($tmpFileUnzipped);
+                }
+            }
+
             unlink($tmpFile);
 
             if ($success) {
@@ -71,7 +80,7 @@ class UpdateDatabaseCommand extends ContainerAwareCommand
                         unlink($tmpFileUnzipped);
                         $output->writeln(sprintf('<error>Unable to check MD5 for %s</error>', $source));
                         continue;
-                    } elseif ($expectedMD5 !== md5_file($tmpFileUnzipped)) {
+                    } elseif ($expectedMD5 !== $calculatedMD5) {
                         unlink($tmpFileUnzipped);
                         $output->writeln(sprintf('<error>MD5 for %s does not match</error>', $source));
                         continue;
