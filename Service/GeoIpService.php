@@ -2,6 +2,7 @@
 
 namespace Cravler\MaxMindGeoIpBundle\Service;
 
+use Cravler\MaxMindGeoIpBundle\Exception\GeoIpException;
 use GeoIp2\WebService\Client;
 use GeoIp2\Database\Reader;
 use GeoIp2\Model\City;
@@ -52,6 +53,8 @@ class GeoIpService
      * @param array  $locales
      *
      * @return Reader
+     *
+     * @throws GeoIpException
      */
     public function getReader($type = 'country', $locales = array('en'))
     {
@@ -60,7 +63,9 @@ class GeoIpService
         }, $type);
 
         if (!isset($this->config['db'][$type])) {
-            throw new \RuntimeException(sprintf('Unknown database type %s', $type));
+            throw new GeoIpException(
+                sprintf('Unknown database type %s', $type)
+            );
         }
 
         return new Reader($this->config['path'].'/'.$this->config['db'][$type], $locales);
@@ -75,7 +80,7 @@ class GeoIpService
      *
      * @return City|Country|ConnectionType|Domain|Isp|AnonymousIp|Insights|Asn
      *
-     * @throws \Exception
+     * @throws GeoIpException
      */
     public function getRecord($ipAddress = 'me', $type = 'country', array $options = array())
     {
@@ -93,7 +98,7 @@ class GeoIpService
         }, $type);
 
         if (!method_exists($provider, $method)) {
-            throw new \Exception(
+            throw new GeoIpException(
                 sprintf('The method "%s" does not exist for %s', $method, get_class($provider))
             );
         }
