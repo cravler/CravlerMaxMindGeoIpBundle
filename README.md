@@ -38,30 +38,30 @@ cravler_max_mind_geo_ip:
     db:
         country: 'GeoIP2-Country.mmdb'
         city: 'GeoIP2-City.mmdb'
+        asn: 'GeoIP2-ASN.mmdb'
         connection_type: 'GeoIP2-Connection-Type.mmdb'
         anonymous_ip: 'GeoIP2-Anonymous-IP.mmdb'
         enterprise: 'GeoIP2-Enterprise'
         domain: 'GeoIP2-Domain.mmdb'
         isp: 'GeoIP2-ISP.mmdb'
-        asn: 'GeoIP2-ASN.mmdb'
     source:
-        country: 'https://geolite.maxmind.com/download/geoip/database/GeoLite2-Country.mmdb.gz'
-        city: 'https://geolite.maxmind.com/download/geoip/database/GeoLite2-City.mmdb.gz'
-        connection_type: ~
-        anonymous_ip: ~
-        enterprise: ~
-        domain: ~
-        isp: ~
+        country: 'https://geolite.maxmind.com/download/geoip/database/GeoLite2-Country.tar.gz'
+        city: 'https://geolite.maxmind.com/download/geoip/database/GeoLite2-City.tar.gz'
         asn: 'https://geolite.maxmind.com/download/geoip/database/GeoLite2-ASN.tar.gz'
-    md5_check:
-        country: 'https://geolite.maxmind.com/download/geoip/database/GeoLite2-Country.md5'
-        city: 'https://geolite.maxmind.com/download/geoip/database/GeoLite2-City.md5'
         connection_type: ~
         anonymous_ip: ~
         enterprise: ~
         domain: ~
         isp: ~
-        asn: ~
+    md5_check:
+        country: 'https://geolite.maxmind.com/download/geoip/database/GeoLite2-Country.tar.gz.md5'
+        city: 'https://geolite.maxmind.com/download/geoip/database/GeoLite2-City.tar.gz.md5'
+        asn: 'https://geolite.maxmind.com/download/geoip/database/GeoLite2-ASN.tar.gz.md5'
+        connection_type: ~
+        anonymous_ip: ~
+        enterprise: ~
+        domain: ~
+        isp: ~
 ```
 
 If you have bought a licence.

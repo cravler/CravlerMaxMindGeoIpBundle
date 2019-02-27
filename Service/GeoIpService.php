@@ -2,9 +2,9 @@
 
 namespace Cravler\MaxMindGeoIpBundle\Service;
 
-use Cravler\MaxMindGeoIpBundle\Exception\GeoIpException;
 use GeoIp2\WebService\Client;
 use GeoIp2\Database\Reader;
+use GeoIp2\Model\Asn;
 use GeoIp2\Model\City;
 use GeoIp2\Model\Country;
 use GeoIp2\Model\Insights;
@@ -12,7 +12,7 @@ use GeoIp2\Model\AnonymousIp;
 use GeoIp2\Model\ConnectionType;
 use GeoIp2\Model\Domain;
 use GeoIp2\Model\Isp;
-use GeoIp2\Model\Asn;
+use Cravler\MaxMindGeoIpBundle\Exception\GeoIpException;
 
 /**
  * @author Sergei Vizel <sergei.vizel@gmail.com>
