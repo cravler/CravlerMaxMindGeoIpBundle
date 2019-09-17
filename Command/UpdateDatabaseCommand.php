@@ -2,17 +2,29 @@
 
 namespace Cravler\MaxMindGeoIpBundle\Command;
 
+use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
-use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
+
 use Cravler\MaxMindGeoIpBundle\DependencyInjection\CravlerMaxMindGeoIpExtension;
 
 /**
  * @author Sergei Vizel <sergei.vizel@gmail.com>
  */
-class UpdateDatabaseCommand extends ContainerAwareCommand
+class UpdateDatabaseCommand extends Command
 {
+    private $config;
+
+    /**
+     * @param $config
+     */
+    public function __construct($config)
+    {
+        $this->config = $config;
+        parent::__construct();
+    }
+
     protected function configure()
     {
         $this
@@ -30,7 +42,7 @@ class UpdateDatabaseCommand extends ContainerAwareCommand
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $config = $this->getContainer()->getParameter(CravlerMaxMindGeoIpExtension::CONFIG_KEY);
+        $config = $this->config;
 
         foreach ($config['source'] as $key => $source) {
             if (!$source) {
