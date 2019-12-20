@@ -11,6 +11,11 @@
         </service>
                
         <service id="Cravler\MaxMindGeoIpBundle\Service\GeoIpService" alias="cravler_max_mind_geo_ip.service.geo_ip_service" />
+
+        <service id="app.command.update_database_command" class="Cravler\MaxMindGeoIpBundle\Command\UpdateDatabaseCommand">
+            <argument>%cravler_max_mind_geo_ip.config%</argument>
+            <tag name="console.command" />
+        </service>
     </services>
 
 </container>
