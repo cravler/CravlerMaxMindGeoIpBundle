@@ -41,22 +41,22 @@ cravler_max_mind_geo_ip:
         asn: 'GeoIP2-ASN.mmdb'
         connection_type: 'GeoIP2-Connection-Type.mmdb'
         anonymous_ip: 'GeoIP2-Anonymous-IP.mmdb'
-        enterprise: 'GeoIP2-Enterprise'
+        enterprise: 'GeoIP2-Enterprise.mmdb'
         domain: 'GeoIP2-Domain.mmdb'
         isp: 'GeoIP2-ISP.mmdb'
     source:
-        country: 'https://geolite.maxmind.com/download/geoip/database/GeoLite2-Country.tar.gz'
-        city: 'https://geolite.maxmind.com/download/geoip/database/GeoLite2-City.tar.gz'
-        asn: 'https://geolite.maxmind.com/download/geoip/database/GeoLite2-ASN.tar.gz'
+        country: ~
+        city: ~
+        asn: ~
         connection_type: ~
         anonymous_ip: ~
         enterprise: ~
         domain: ~
         isp: ~
     md5_check:
-        country: 'https://geolite.maxmind.com/download/geoip/database/GeoLite2-Country.tar.gz.md5'
-        city: 'https://geolite.maxmind.com/download/geoip/database/GeoLite2-City.tar.gz.md5'
-        asn: 'https://geolite.maxmind.com/download/geoip/database/GeoLite2-ASN.tar.gz.md5'
+        country: ~
+        city: ~
+        asn: ~
         connection_type: ~
         anonymous_ip: ~
         enterprise: ~
@@ -64,23 +64,48 @@ cravler_max_mind_geo_ip:
         isp: ~
 ```
 
-If you have bought a licence.
+If you need a `GeoLite2` licence:
+
+1. [Sign up for a MaxMind account](https://www.maxmind.com/en/geolite2/signup) (no purchase required)
+2. Set your password and create a [license key](https://www.maxmind.com/en/accounts/current/license-key)
+    `Will this key be used for GeoIP Update? > No`
+
+```yaml
+parameters:
+    max_mind.license_key: '<YOUR_LICENSE_KEY>'
+
+cravler_max_mind_geo_ip:
+    source:
+        country: 'https://download.maxmind.com/app/geoip_download?edition_id=GeoLite2-Country&suffix=tar.gz&license_key=%max_mind.license_key%'
+        city: 'https://download.maxmind.com/app/geoip_download?edition_id=GeoLite2-City&suffix=tar.gz&license_key=%max_mind.license_key%'
+        asn: 'https://download.maxmind.com/app/geoip_download?edition_id=GeoLite2-ASN&suffix=tar.gz&license_key=%max_mind.license_key%'
+    md5_check:
+        country: 'https://download.maxmind.com/app/geoip_download?edition_id=GeoLite2-Country&suffix=tar.gz.md5&license_key=%max_mind.license_key%'
+        city: 'https://download.maxmind.com/app/geoip_download?edition_id=GeoLite2-City&suffix=tar.gz.md5&license_key=%max_mind.license_key%'
+        asn: 'https://download.maxmind.com/app/geoip_download?edition_id=GeoLite2-ASN&suffix=tar.gz.md5&license_key=%max_mind.license_key%'
+```
+
+If you have bought a licence:
 
 ``` yaml
+parameters:
+    max_mind.user_id: '<YOUR_USER_ID>'
+    max_mind.license_key: '<YOUR_LICENSE_KEY>'
+
 cravler_max_mind_geo_ip:
     client:
-        user_id: 123456
-        license_key: abcd1234
+        user_id: '%max_mind.user_id%'
+        license_key: '%max_mind.license_key%'
         ...
     source:
-        country: 'https://download.maxmind.com/app/geoip_download?edition_id=GeoIP2-Country&suffix=tar.gz&license_key=abcd1234'
+        country: 'https://download.maxmind.com/app/geoip_download?edition_id=GeoIP2-Country&suffix=tar.gz&license_key=%max_mind.license_key%'
         ...
     md5_check:
         country: ~
         ...
 ```
 
-> **NB!** Do not forget to change your licence key in URL source. You can find links in MaxMind website in your setting `manualy update`.
+> **NB!** Do not forget to change your licence data.
 
 ## Download and update the MaxMind GeoIp2 database
 
