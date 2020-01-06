@@ -5,18 +5,15 @@
            xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
 
     <services>
+        <service id="Cravler\MaxMindGeoIpBundle\Service\GeoIpService" alias="cravler_max_mind_geo_ip.service.geo_ip_service" />
+
         <service id="cravler_max_mind_geo_ip.service.geo_ip_service"
                  class="Cravler\MaxMindGeoIpBundle\Service\GeoIpService"
                  public="true">
         </service>
-               
-        <service id="Cravler\MaxMindGeoIpBundle\Service\GeoIpService" alias="cravler_max_mind_geo_ip.service.geo_ip_service" />
 
         <service id="cravler_max_mind_geo_ip.command.update_database_command"
                  class="Cravler\MaxMindGeoIpBundle\Command\UpdateDatabaseCommand">
-
-            <argument>%cravler_max_mind_geo_ip.config%</argument>
-
             <tag name="console.command" />
         </service>
     </services>

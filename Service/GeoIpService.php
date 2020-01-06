@@ -25,7 +25,6 @@ class GeoIpService
     private $config = array();
 
     /**
-     * GeoIpService constructor.
      * @param array $config
      */
     public function __construct(array $config)
@@ -72,8 +71,6 @@ class GeoIpService
     }
 
     /**
-     * *.
-     *
      * @param string $ipAddress
      * @param string $type
      * @param array  $options

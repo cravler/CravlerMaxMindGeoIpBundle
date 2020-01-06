@@ -7,24 +7,29 @@ use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
-use Cravler\MaxMindGeoIpBundle\DependencyInjection\CravlerMaxMindGeoIpExtension;
-
 /**
  * @author Sergei Vizel <sergei.vizel@gmail.com>
  */
 class UpdateDatabaseCommand extends Command
 {
-    private $config;
+    /**
+     * @var array
+     */
+    private $config = array();
 
     /**
-     * @param $config
+     * @param array $config
      */
-    public function __construct($config)
+    public function __construct(array $config)
     {
-        $this->config = $config;
         parent::__construct();
+
+        $this->config = $config;
     }
 
+    /**
+     * {@inheritdoc}
+     */
     protected function configure()
     {
         $this
@@ -35,10 +40,7 @@ class UpdateDatabaseCommand extends Command
     }
 
     /**
-     * @param InputInterface  $input
-     * @param OutputInterface $output
-     *
-     * @return int|null|void
+     * {@inheritdoc}
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {

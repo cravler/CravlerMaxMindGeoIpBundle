@@ -2,10 +2,10 @@
 
 namespace Cravler\MaxMindGeoIpBundle\DependencyInjection;
 
-use Symfony\Component\DependencyInjection\ContainerBuilder;
-use Symfony\Component\Config\FileLocator;
 use Symfony\Component\HttpKernel\DependencyInjection\Extension;
+use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Loader;
+use Symfony\Component\Config\FileLocator;
 
 /**
  * This is the class that loads and manages your bundle configuration.
@@ -29,6 +29,6 @@ class CravlerMaxMindGeoIpExtension extends Extension
         $loader->load('services.xml');
 
         $container->findDefinition('cravler_max_mind_geo_ip.service.geo_ip_service')->setArguments(array($config));
-
+        $container->findDefinition('cravler_max_mind_geo_ip.command.update_database_command')->setArguments(array($config));
     }
 }
