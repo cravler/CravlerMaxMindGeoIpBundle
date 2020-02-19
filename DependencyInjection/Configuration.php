@@ -21,9 +21,11 @@ class Configuration implements ConfigurationInterface
 
         if (method_exists($treeBuilder, 'getRootNode')) {
             $rootNode = $treeBuilder->getRootNode();
+            $defaultPathValue = '%kernel.project_dir%/config/app/MaxMind';
         } else {
             // BC layer for symfony/config 4.1 and older
             $rootNode = $treeBuilder->root('cravler_max_mind_geo_ip');
+            $defaultPathValue = '%kernel.root_dir%/Resources/MaxMind';
         }
 
         $rootNode
@@ -43,7 +45,7 @@ class Configuration implements ConfigurationInterface
                     ->end()
                 ->end()
                 ->scalarNode('path')
-                    ->defaultValue('%kernel.root_dir%/Resources/MaxMind')
+                    ->defaultValue($defaultPathValue)
                 ->end()
                 ->arrayNode('db')
                     ->addDefaultsIfNotSet()
