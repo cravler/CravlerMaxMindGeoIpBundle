@@ -12,6 +12,9 @@ use Symfony\Component\Console\Output\OutputInterface;
  */
 class UpdateDatabaseCommand extends Command
 {
+    protected static $defaultName = 'cravler:maxmind:geoip-update';
+    protected static $defaultDescription = 'Downloads and updates the MaxMind GeoIp2 database';
+    
     /**
      * @var array
      */
@@ -33,8 +36,6 @@ class UpdateDatabaseCommand extends Command
     protected function configure()
     {
         $this
-            ->setName('cravler:maxmind:geoip-update')
-            ->setDescription('Downloads and updates the MaxMind GeoIp2 database')
             ->addOption('no-md5-check', null, InputOption::VALUE_NONE, 'Disable MD5 check')
         ;
     }
