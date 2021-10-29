@@ -36,6 +36,8 @@ class UpdateDatabaseCommand extends Command
     protected function configure()
     {
         $this
+            ->setName(static::$defaultName)
+            ->setDescription(static::$defaultDescription)
             ->addOption('no-md5-check', null, InputOption::VALUE_NONE, 'Disable MD5 check')
         ;
     }
