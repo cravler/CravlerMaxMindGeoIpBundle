@@ -2,13 +2,16 @@
 
 ## Installation
 
-### Step 1: update your vendors by running
+### Step 1: Download the Bundle
 
 ``` bash
-$ php composer.phar require cravler/maxmind-geoip-bundle:dev-master
+composer require cravler/maxmind-geoip-bundle:1.x-dev
 ```
 
-### Step2: Enable the bundle
+This command requires you to have Composer installed globally, as explained
+in the [installation chapter](https://getcomposer.org/doc/00-intro.md) of the Composer documentation.
+
+### Step 2: Enable the Bundle
 
 ``` php
 <?php
@@ -64,7 +67,7 @@ cravler_max_mind_geo_ip:
         isp: ~
 ```
 
-If you need a `GeoLite2` licence:
+If you need a `GeoLite2` license:
 
 1. [Sign up for a MaxMind account](https://www.maxmind.com/en/geolite2/signup) (no purchase required)
 2. Set your password and create a [license key](https://www.maxmind.com/en/accounts/current/license-key)
@@ -85,7 +88,7 @@ cravler_max_mind_geo_ip:
         asn: 'https://download.maxmind.com/app/geoip_download?edition_id=GeoLite2-ASN&suffix=tar.gz.md5&license_key=%max_mind.license_key%'
 ```
 
-If you have bought a licence:
+If you have bought a license:
 
 ``` yaml
 parameters:
@@ -105,10 +108,9 @@ cravler_max_mind_geo_ip:
         ...
 ```
 
-> **NB!** Do not forget to change your licence data.
+> **NB!** Do not forget to change your license data.
 
 ## Download and update the MaxMind GeoIp2 database
-
 
 ``` bash
 php bin/console cravler:maxmind:geoip-update
@@ -134,7 +136,6 @@ $record = $geoIpService->getRecord('128.101.101.101', 'city');
 print($record->country->isoCode . "\n"); // 'US'
 print($record->country->name . "\n"); // 'United States'
 print($record->city->name . "\n"); // 'Minneapolis'
-
 ```
 
 ### Web Service Client
@@ -145,7 +146,6 @@ $geoIpService = $container->get('cravler_max_mind_geo_ip.service.geo_ip_service'
 $client = $geoIpService->getClient();
 
 $record = $client->city('128.101.101.101');
-
 ```
 
 ## License
