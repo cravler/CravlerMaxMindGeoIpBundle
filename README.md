@@ -5,7 +5,7 @@
 ### Step 1: Download the Bundle
 
 ``` bash
-composer require cravler/maxmind-geoip-bundle:1.x-dev
+composer require cravler/maxmind-geoip-bundle:2.x-dev
 ```
 
 This command requires you to have Composer installed globally, as explained
@@ -13,18 +13,18 @@ in the [installation chapter](https://getcomposer.org/doc/00-intro.md) of the Co
 
 ### Step 2: Enable the Bundle
 
+This bundle should be automatically enabled by [Flex](https://symfony.com/doc/current/setup/flex.html).
+In case you don't use Flex, you'll need to manually enable the bundle by
+adding the following line in the `config/bundles.php` file of your project:
+
 ``` php
 <?php
-// app/AppKernel.php
+// config/bundles.php
 
-public function registerBundles()
-{
-    $bundles = array(
-        // ...
-
-        new Cravler\MaxMindGeoIpBundle\CravlerMaxMindGeoIpBundle(),
-    );
-}
+return [
+    // ...
+    Cravler\MaxMindGeoIpBundle\CravlerMaxMindGeoIpBundle::class => ['all' => true],
+];
 ```
 
 ## Configuration
@@ -37,7 +37,7 @@ cravler_max_mind_geo_ip:
         user_id: ~
         license_key: ~
         options: {}
-    path: '%kernel.root_dir%/Resources/MaxMind'
+    path: '%kernel.project_dir%/resources/MaxMind'
     db:
         country: 'GeoIP2-Country.mmdb'
         city: 'GeoIP2-City.mmdb'
@@ -74,6 +74,8 @@ If you need a `GeoLite2` license:
     `Will this key be used for GeoIP Update? > No`
 
 ```yaml
+# config/packages/cravler_max_mind_geo_ip.yaml
+
 parameters:
     max_mind.license_key: '<YOUR_LICENSE_KEY>'
 
@@ -91,6 +93,8 @@ cravler_max_mind_geo_ip:
 If you have bought a license:
 
 ``` yaml
+# config/packages/cravler_max_mind_geo_ip.yaml
+
 parameters:
     max_mind.user_id: '<YOUR_USER_ID>'
     max_mind.license_key: '<YOUR_LICENSE_KEY>'
@@ -117,11 +121,10 @@ php bin/console cravler:maxmind:geoip-update
 ```
 
 You can use the *--no-md5-check* option if you want to skip MD5 check.
+
 ``` bash
 php bin/console cravler:maxmind:geoip-update --no-md5-check
 ```
-
-> On Symfony 2.8 or older use `app/console` instead of `bin/console`
 
 ## How to use
 

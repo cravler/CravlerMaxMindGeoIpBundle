@@ -14,11 +14,11 @@ class UpdateDatabaseCommand extends Command
 {
     protected static $defaultName = 'cravler:maxmind:geoip-update';
     protected static $defaultDescription = 'Downloads and updates the MaxMind GeoIp2 database';
-    
+
     /**
      * @var array
      */
-    private $config = array();
+    private array $config = [];
 
     /**
      * @param array $config
@@ -33,23 +33,17 @@ class UpdateDatabaseCommand extends Command
     /**
      * {@inheritdoc}
      */
-    protected function configure()
+    protected function configure(): void
     {
-        $this
-            ->setName(static::$defaultName)
-            ->setDescription(static::$defaultDescription)
-            ->addOption('no-md5-check', null, InputOption::VALUE_NONE, 'Disable MD5 check')
-        ;
+        $this->addOption('no-md5-check', null, InputOption::VALUE_NONE, 'Disable MD5 check');
     }
 
     /**
      * {@inheritdoc}
      */
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
-        $config = $this->config;
-
-        foreach ($config['source'] as $key => $source) {
+        foreach ($this->config['source'] as $key => $source) {
             if (!$source) {
                 continue;
             }
@@ -66,7 +60,7 @@ class UpdateDatabaseCommand extends Command
 
             $output->writeln('<info>Done</info>');
             $output->write('Unzipping the downloaded data... ');
-            $tmpFileUnzipped = dirname($tmpFile).DIRECTORY_SEPARATOR.$config['db'][$key];
+            $tmpFileUnzipped = dirname($tmpFile) . DIRECTORY_SEPARATOR . $this->config['db'][$key];
 
             $success = $this->decompressFile($tmpFile, $tmpFileUnzipped);
 
@@ -90,8 +84,8 @@ class UpdateDatabaseCommand extends Command
             # MD5 check
             if (!$input->getOption('no-md5-check')) {
                 $output->write('Checking file hash... ');
-                if ($config['md5_check'][$key]) {
-                    $expectedMD5 = file_get_contents($config['md5_check'][$key]);
+                if ($this->config['md5_check'][$key]) {
+                    $expectedMD5 = file_get_contents($this->config['md5_check'][$key]);
 
                     if (!$expectedMD5 || strlen($expectedMD5) !== 32) {
                         unlink($tmpFileUnzipped);
@@ -102,23 +96,23 @@ class UpdateDatabaseCommand extends Command
                         $output->writeln(sprintf('<error>MD5 for %s does not match</error>', $source));
                         continue;
                     } else {
-                        $output->writeln('<info>File hash OK.</info>');
+                        $output->writeln('<info>File hash OK</info>');
                     }
                 } else {
                     $output->writeln('<comment>Skipped</comment>');
                 }
             }
 
-            if (!file_exists($config['path'])) {
-                mkdir($config['path'], 0777, true);
+            if (!file_exists($this->config['path'])) {
+                mkdir($this->config['path'], 0777, true);
             }
 
-            $outputFilePath = $config['path'].DIRECTORY_SEPARATOR.$config['db'][$key];
+            $outputFilePath = $this->config['path'] . DIRECTORY_SEPARATOR . $this->config['db'][$key];
             chmod(dirname($outputFilePath), 0777);
             $success = @rename($tmpFileUnzipped, $outputFilePath);
 
             if ($success) {
-                $output->writeln(sprintf('<info>Update completed for %s.</info>', $key));
+                $output->writeln(sprintf('<info>Update completed for %s</info>', $key));
             } else {
                 $output->writeln(sprintf('<error>Unable to update %s</error>', $key));
             }
@@ -133,11 +127,11 @@ class UpdateDatabaseCommand extends Command
      *
      * @return bool|string
      */
-    private function downloadFile($source)
+    private function downloadFile(string $source)
     {
         $tmpFile = tempnam(sys_get_temp_dir(), 'maxmind_geoip2_');
         if (strpos($source, 'tar.gz') !== false) {
-            @rename($tmpFile, $tmpFile.'.tar.gz');
+            @rename($tmpFile, $tmpFile . '.tar.gz');
             $tmpFile .= '.tar.gz';
         }
 
@@ -149,12 +143,12 @@ class UpdateDatabaseCommand extends Command
     }
 
     /**
-     * @param $fileName
-     * @param $outputFilePath
+     * @param string $fileName
+     * @param string $outputFilePath
      *
      * @return bool
      */
-    private function decompressFile($fileName, $outputFilePath)
+    private function decompressFile(string $fileName, string $outputFilePath): bool
     {
         if (strpos($fileName, '.tar.gz') !== false) {
             $tmpDir = tempnam(sys_get_temp_dir(), 'MaxMind_');
@@ -169,7 +163,7 @@ class UpdateDatabaseCommand extends Command
             $phar->extractTo($tmpDir);
             unlink($tarFileName);
 
-            $files = glob($tmpDir.DIRECTORY_SEPARATOR.'*'.DIRECTORY_SEPARATOR.'*.mmdb');
+            $files = glob($tmpDir . DIRECTORY_SEPARATOR . '*' . DIRECTORY_SEPARATOR . '*.mmdb');
             if (count($files)) {
                 @rename($files[0], $outputFilePath);
             }

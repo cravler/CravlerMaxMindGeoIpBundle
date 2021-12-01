@@ -15,18 +15,10 @@ class Configuration implements ConfigurationInterface
     /**
      * {@inheritdoc}
      */
-    public function getConfigTreeBuilder()
+    public function getConfigTreeBuilder(): TreeBuilder
     {
         $treeBuilder = new TreeBuilder('cravler_max_mind_geo_ip');
-
-        if (method_exists($treeBuilder, 'getRootNode')) {
-            $rootNode = $treeBuilder->getRootNode();
-            $defaultPathValue = '%kernel.project_dir%/config/app/MaxMind';
-        } else {
-            // BC layer for symfony/config 4.1 and older
-            $rootNode = $treeBuilder->root('cravler_max_mind_geo_ip');
-            $defaultPathValue = '%kernel.root_dir%/Resources/MaxMind';
-        }
+        $rootNode = $treeBuilder->getRootNode();
 
         $rootNode
             ->children()
@@ -45,7 +37,7 @@ class Configuration implements ConfigurationInterface
                     ->end()
                 ->end()
                 ->scalarNode('path')
-                    ->defaultValue($defaultPathValue)
+                    ->defaultValue('%kernel.project_dir%/resources/MaxMind')
                 ->end()
                 ->arrayNode('db')
                     ->addDefaultsIfNotSet()

@@ -14,21 +14,18 @@ use Symfony\Component\Config\FileLocator;
  */
 class CravlerMaxMindGeoIpExtension extends Extension
 {
-    const CONFIG_KEY = 'cravler_max_mind_geo_ip.config';
-
     /**
      * {@inheritdoc}
      */
-    public function load(array $configs, ContainerBuilder $container)
+    public function load(array $configs, ContainerBuilder $container): void
     {
         $configuration = new Configuration();
         $config = $this->processConfiguration($configuration, $configs);
-        $container->setParameter(self::CONFIG_KEY, $config); // BC
 
-        $loader = new Loader\XmlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
+        $loader = new Loader\XmlFileLoader($container, new FileLocator(__DIR__ . '/../Resources/config'));
         $loader->load('services.xml');
 
-        $container->findDefinition('cravler_max_mind_geo_ip.service.geo_ip_service')->setArguments(array($config));
-        $container->findDefinition('cravler_max_mind_geo_ip.command.update_database_command')->setArguments(array($config));
+        $container->findDefinition('cravler_max_mind_geo_ip.service.geo_ip_service')->setArguments([$config]);
+        $container->findDefinition('cravler_max_mind_geo_ip.command.update_database_command')->setArguments([$config]);
     }
 }

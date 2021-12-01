@@ -2,16 +2,9 @@
 
 namespace Cravler\MaxMindGeoIpBundle\Service;
 
-use GeoIp2\WebService\Client;
 use GeoIp2\Database\Reader;
-use GeoIp2\Model\Asn;
-use GeoIp2\Model\City;
-use GeoIp2\Model\Country;
-use GeoIp2\Model\Insights;
-use GeoIp2\Model\AnonymousIp;
-use GeoIp2\Model\ConnectionType;
-use GeoIp2\Model\Domain;
-use GeoIp2\Model\Isp;
+use GeoIp2\WebService\Client;
+use GeoIp2\Model\AbstractModel;
 use Cravler\MaxMindGeoIpBundle\Exception\GeoIpException;
 
 /**
@@ -22,7 +15,7 @@ class GeoIpService
     /**
      * @var array
      */
-    private $config = array();
+    private array $config = [];
 
     /**
      * @param array $config
@@ -37,52 +30,48 @@ class GeoIpService
      *
      * @return Client
      */
-    public function getClient($locales = array('en'))
+    public function getClient(array $locales = ['en']): Client
     {
         return new Client(
             $this->config['client']['user_id'],
             $this->config['client']['license_key'],
             $locales,
-            $this->config['client']['options'] ?: array()
+            $this->config['client']['options'] ?: []
         );
     }
 
     /**
      * @param string $type
-     * @param array  $locales
+     * @param array $locales
      *
      * @return Reader
      *
      * @throws GeoIpException
      */
-    public function getReader($type = 'country', $locales = array('en'))
+    public function getReader(string $type = 'country', $locales = ['en']): Reader
     {
-        $type = preg_replace_callback('/([A-Z])/', function ($match) {
-            return '_'.strtolower($match[1]);
-        }, $type);
+        $type = preg_replace_callback('/([A-Z])/', fn(array $matches): string => '_' . strtolower($matches[1]), $type);
 
         if (!isset($this->config['db'][$type])) {
-            throw new GeoIpException(
-                sprintf('Unknown database type %s', $type)
-            );
+            throw new GeoIpException(sprintf('Unknown database type %s', $type));
         }
 
-        return new Reader($this->config['path'].'/'.$this->config['db'][$type], $locales);
+        return new Reader($this->config['path'] . '/' . $this->config['db'][$type], $locales);
     }
 
     /**
      * @param string $ipAddress
      * @param string $type
-     * @param array  $options
+     * @param array $options
      *
-     * @return City|Country|ConnectionType|Domain|Isp|AnonymousIp|Insights|Asn
+     * @return AbstractModel
      *
      * @throws GeoIpException
      */
-    public function getRecord($ipAddress = 'me', $type = 'country', array $options = array())
+    public function getRecord(string $ipAddress = 'me', string $type = 'country', array $options = []): AbstractModel
     {
         $provider = isset($options['provider']) ? $options['provider'] : 'reader';
-        $locales = isset($options['locales']) ? $options['locales'] : array('en');
+        $locales = isset($options['locales']) ? $options['locales'] : ['en'];
 
         if ('client' == $provider) {
             $provider = $this->getClient($locales);
@@ -90,14 +79,10 @@ class GeoIpService
             $provider = $this->getReader($type, $locales);
         }
 
-        $method = preg_replace_callback('/_([a-z])/', function ($match) {
-            return strtoupper($match[1]);
-        }, $type);
+        $method = preg_replace_callback('/_([a-z])/', fn(array $matches): string => strtoupper($matches[1]), $type);
 
         if (!method_exists($provider, $method)) {
-            throw new GeoIpException(
-                sprintf('The method "%s" does not exist for %s', $method, get_class($provider))
-            );
+            throw new GeoIpException(sprintf('The method "%s" does not exist for %s', $method, get_class($provider)));
         }
 
         return $provider->{$method}($ipAddress);
