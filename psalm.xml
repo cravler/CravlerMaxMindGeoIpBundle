@@ -1,0 +1,40 @@
+<?xml version="1.0"?>
+<psalm
+    errorLevel="5"
+    resolveFromConfigFile="true"
+    phpVersion="8.2"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns="https://getpsalm.org/schema/config"
+    xsi:schemaLocation="https://getpsalm.org/schema/config vendor/vimeo/psalm/config.xsd"
+    findUnusedBaselineEntry="true"
+    findUnusedCode="false"
+>
+    <plugins>
+        <pluginClass class="Psalm\SymfonyPsalmPlugin\Plugin">
+            <containerXml>Resources/config/services.xml</containerXml>
+        </pluginClass>
+    </plugins>
+    <projectFiles>
+        <directory name="Command" />
+        <directory name="DependencyInjection" />
+        <directory name="Exception" />
+        <directory name="Service" />
+        <file name="CravlerMaxMindGeoIpBundle.php" />
+        <ignoreFiles>
+            <directory name="vendor" />
+        </ignoreFiles>
+    </projectFiles>
+    <issueHandlers>
+        <UndefinedMethod>
+            <errorLevel type="suppress">
+                <file name="DependencyInjection/Configuration.php" />
+            </errorLevel>
+        </UndefinedMethod>
+        <UnusedClass>
+            <errorLevel type="suppress">
+                <file name="CravlerMaxMindGeoIpBundle.php" />
+                <file name="DependencyInjection/CravlerMaxMindGeoIpExtension.php" />
+            </errorLevel>
+        </UnusedClass>
+    </issueHandlers>
+</psalm>

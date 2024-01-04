@@ -14,7 +14,7 @@
 
         <service id="cravler_max_mind_geo_ip.command.update_database_command"
                  class="Cravler\MaxMindGeoIpBundle\Command\UpdateDatabaseCommand">
-            <tag name="console.command" />
+            <tag name="console.command" command="cravler:maxmind:geoip-update" />
         </service>
     </services>
 
