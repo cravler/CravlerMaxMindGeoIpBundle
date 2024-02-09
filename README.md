@@ -5,7 +5,7 @@
 ### Step 1: Download the Bundle
 
 ``` bash
-composer require cravler/maxmind-geoip-bundle:2.x-dev
+composer require cravler/maxmind-geoip-bundle:3.x-dev
 ```
 
 This command requires you to have Composer installed globally, as explained

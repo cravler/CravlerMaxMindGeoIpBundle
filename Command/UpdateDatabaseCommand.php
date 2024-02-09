@@ -3,8 +3,8 @@
 namespace Cravler\MaxMindGeoIpBundle\Command;
 
 use Symfony\Component\Console\Command\Command;
-use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 
 /**
@@ -16,84 +16,91 @@ class UpdateDatabaseCommand extends Command
     protected static $defaultDescription = 'Downloads and updates the MaxMind GeoIp2 database';
 
     /**
-     * @var array
+     * @param array<string, mixed> $config
      */
-    private array $config = [];
-
-    /**
-     * @param array $config
-     */
-    public function __construct(array $config)
+    public function __construct(private readonly array $config = [])
     {
         parent::__construct();
-
-        $this->config = $config;
     }
 
-    /**
-     * {@inheritdoc}
-     */
+    public static function getDefaultName(): ?string
+    {
+        return self::$defaultName;
+    }
+
+    public static function getDefaultDescription(): ?string
+    {
+        return self::$defaultDescription;
+    }
+
     protected function configure(): void
     {
         $this->addOption('no-md5-check', null, InputOption::VALUE_NONE, 'Disable MD5 check');
     }
 
-    /**
-     * {@inheritdoc}
-     */
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
-        foreach ($this->config['source'] as $key => $source) {
+        /** @var array<string, string> $db */
+        $db = \is_array($this->config['db'] ?? null) ? $this->config['db'] : [];
+
+        /** @var array<string, ?string> $md5Check */
+        $md5Check = \is_array($this->config['md5_check'] ?? null) ? $this->config['md5_check'] : [];
+
+        /** @var array<string, ?string> $sources */
+        $sources = \is_array($this->config['source'] ?? null) ? $this->config['source'] : [];
+
+        foreach ($sources as $key => $source) {
             if (!$source) {
                 continue;
             }
 
             $output->writeln('');
-            $output->write(sprintf('Downloading %s... ', $source));
+            $output->write(\sprintf('Downloading %s... ', $source));
 
             $tmpFile = $this->downloadFile($source);
-            if (false === $tmpFile) {
+            if (!$tmpFile) {
                 $output->writeln('FAILED');
-                $output->writeln(sprintf('<error>Error during file download occurred on %s</error>', $source));
+                $output->writeln(\sprintf('<error>Error during file download occurred on %s</error>', $source));
                 continue;
             }
 
             $output->writeln('<info>Done</info>');
             $output->write('Unzipping the downloaded data... ');
-            $tmpFileUnzipped = dirname($tmpFile) . DIRECTORY_SEPARATOR . $this->config['db'][$key];
+            $tmpFileUnzipped = \dirname($tmpFile) . DIRECTORY_SEPARATOR . $db[$key];
 
             $success = $this->decompressFile($tmpFile, $tmpFileUnzipped);
 
+            $calculatedMD5 = null;
             if (!$input->getOption('no-md5-check')) {
-                if (strpos($tmpFile, '.tar.gz') !== false) {
-                    $calculatedMD5 = md5_file($tmpFile);
+                if (\str_contains($tmpFile, '.tar.gz')) {
+                    $calculatedMD5 = \md5_file($tmpFile);
                 } else {
-                    $calculatedMD5 = md5_file($tmpFileUnzipped);
+                    $calculatedMD5 = \md5_file($tmpFileUnzipped);
                 }
             }
 
-            unlink($tmpFile);
+            \unlink($tmpFile);
 
             if ($success) {
                 $output->writeln('<info>Done</info>');
             } else {
-                $output->writeln(sprintf('<error>An error occured when decompressing %s</error>', basename($tmpFile)));
+                $output->writeln(\sprintf('<error>An error occured when decompressing %s</error>', \basename($tmpFile)));
                 continue;
             }
 
-            # MD5 check
+            // MD5 check
             if (!$input->getOption('no-md5-check')) {
                 $output->write('Checking file hash... ');
-                if ($this->config['md5_check'][$key]) {
-                    $expectedMD5 = file_get_contents($this->config['md5_check'][$key]);
+                if (\is_string($md5Check[$key] ?? null)) {
+                    $expectedMD5 = \file_get_contents($md5Check[$key]);
 
-                    if (!$expectedMD5 || strlen($expectedMD5) !== 32) {
-                        unlink($tmpFileUnzipped);
-                        $output->writeln(sprintf('<error>Unable to check MD5 for %s</error>', $source));
+                    if (!$expectedMD5 || 32 !== \strlen($expectedMD5)) {
+                        \unlink($tmpFileUnzipped);
+                        $output->writeln(\sprintf('<error>Unable to check MD5 for %s</error>', $source));
                         continue;
                     } elseif ($expectedMD5 !== $calculatedMD5) {
-                        unlink($tmpFileUnzipped);
-                        $output->writeln(sprintf('<error>MD5 for %s does not match</error>', $source));
+                        \unlink($tmpFileUnzipped);
+                        $output->writeln(\sprintf('<error>MD5 for %s does not match</error>', $source));
                         continue;
                     } else {
                         $output->writeln('<info>File hash OK</info>');
@@ -103,18 +110,20 @@ class UpdateDatabaseCommand extends Command
                 }
             }
 
-            if (!file_exists($this->config['path'])) {
-                mkdir($this->config['path'], 0777, true);
+            /** @var string $path */
+            $path = $this->config['path'];
+            if (!\file_exists($path)) {
+                \mkdir($path, 0777, true);
             }
 
-            $outputFilePath = $this->config['path'] . DIRECTORY_SEPARATOR . $this->config['db'][$key];
-            chmod(dirname($outputFilePath), 0777);
-            $success = @rename($tmpFileUnzipped, $outputFilePath);
+            $outputFilePath = $this->config['path'] . DIRECTORY_SEPARATOR . $db[$key];
+            \chmod(\dirname($outputFilePath), 0777);
+            $success = @\rename($tmpFileUnzipped, $outputFilePath);
 
             if ($success) {
-                $output->writeln(sprintf('<info>Update completed for %s</info>', $key));
+                $output->writeln(\sprintf('<info>Update completed for %s</info>', $key));
             } else {
-                $output->writeln(sprintf('<error>Unable to update %s</error>', $key));
+                $output->writeln(\sprintf('<error>Unable to update %s</error>', $key));
             }
         }
         $output->writeln('');
@@ -122,71 +131,77 @@ class UpdateDatabaseCommand extends Command
         return 0;
     }
 
-    /**
-     * @param string $source
-     *
-     * @return bool|string
-     */
-    private function downloadFile(string $source)
+    private function downloadFile(string $source): ?string
     {
-        $tmpFile = tempnam(sys_get_temp_dir(), 'maxmind_geoip2_');
-        if (strpos($source, 'tar.gz') !== false) {
-            @rename($tmpFile, $tmpFile . '.tar.gz');
+        $tmpFile = \tempnam(\sys_get_temp_dir(), 'maxmind_geoip2_');
+        if (\is_string($tmpFile) && \str_contains($source, 'tar.gz')) {
+            @\rename($tmpFile, $tmpFile . '.tar.gz');
             $tmpFile .= '.tar.gz';
         }
 
-        if (!@copy($source, $tmpFile)) {
-            return false;
+        if (!\is_string($tmpFile) || !@\copy($source, $tmpFile)) {
+            return null;
         }
 
         return $tmpFile;
     }
 
-    /**
-     * @param string $fileName
-     * @param string $outputFilePath
-     *
-     * @return bool
-     */
     private function decompressFile(string $fileName, string $outputFilePath): bool
     {
-        if (strpos($fileName, '.tar.gz') !== false) {
-            $tmpDir = tempnam(sys_get_temp_dir(), 'MaxMind_');
-            unlink($tmpDir);
-            mkdir($tmpDir);
+        if (\str_contains($fileName, '.tar.gz')) {
+            $tmpDir = \tempnam(\sys_get_temp_dir(), 'MaxMind_');
+            if (!\is_string($tmpDir)) {
+                return false;
+            }
+            \unlink($tmpDir);
+            \mkdir($tmpDir);
 
             $p = new \PharData($fileName);
             $p->decompress();
 
-            $tarFileName = str_replace('.gz', '', $fileName);
+            $tarFileName = \str_replace('.gz', '', $fileName);
             $phar = new \PharData($tarFileName);
             $phar->extractTo($tmpDir);
-            unlink($tarFileName);
+            \unlink($tarFileName);
 
-            $files = glob($tmpDir . DIRECTORY_SEPARATOR . '*' . DIRECTORY_SEPARATOR . '*.mmdb');
-            if (count($files)) {
-                @rename($files[0], $outputFilePath);
+            $foundFiles = \glob($tmpDir . DIRECTORY_SEPARATOR . '*' . DIRECTORY_SEPARATOR . '*.mmdb');
+            if (\is_array($foundFiles) && \count($foundFiles)) {
+                @\rename($foundFiles[0], $outputFilePath);
             }
 
             $files = new \RecursiveIteratorIterator(
-                new \RecursiveDirectoryIterator($tmpDir, \RecursiveDirectoryIterator::SKIP_DOTS),
+                new \RecursiveDirectoryIterator($tmpDir, \FilesystemIterator::SKIP_DOTS),
                 \RecursiveIteratorIterator::CHILD_FIRST
             );
-            foreach ($files as $fileinfo) {
-                $todo = ($fileinfo->isDir() ? 'rmdir' : 'unlink');
-                $todo($fileinfo->getRealPath());
+            foreach ($files as $fileInfo) {
+                /** @var \SplFileInfo $fileInfo */
+                if ($fileInfo->isDir()) {
+                    \rmdir($fileInfo->getRealPath());
+                } else {
+                    \unlink($fileInfo->getRealPath());
+                }
             }
-            rmdir($tmpDir);
+            \rmdir($tmpDir);
         } else {
-            $gz = gzopen($fileName, 'rb');
-            $outputFile = fopen($outputFilePath, 'wb');
-            while (!gzeof($gz)) {
-                fwrite($outputFile, gzread($gz, 4096));
+            $gz = \gzopen($fileName, 'rb');
+            if (!\is_resource($gz)) {
+                return false;
             }
-            fclose($outputFile);
-            gzclose($gz);
+            $outputFile = \fopen($outputFilePath, 'wb');
+            if (!\is_resource($outputFile)) {
+                return false;
+            }
+            while (!\gzeof($gz)) {
+                $data = \gzread($gz, 4096);
+                if (false === $data) {
+                    return false;
+                }
+                \fwrite($outputFile, $data);
+            }
+            \fclose($outputFile);
+            \gzclose($gz);
         }
 
-        return is_readable($outputFilePath);
+        return \is_readable($outputFilePath);
     }
 }
