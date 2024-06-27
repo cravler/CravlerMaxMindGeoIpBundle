@@ -25,16 +25,6 @@ class UpdateDatabaseCommand extends Command
         parent::__construct();
     }
 
-    public static function getDefaultName(): ?string
-    {
-        return self::$defaultName;
-    }
-
-    public static function getDefaultDescription(): ?string
-    {
-        return self::$defaultDescription;
-    }
-
     protected function configure(): void
     {
         $this->addOption('no-md5-check', null, InputOption::VALUE_NONE, 'Disable MD5 check');
