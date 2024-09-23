@@ -2,6 +2,7 @@
 
 namespace Cravler\MaxMindGeoIpBundle\Command;
 
+use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
@@ -10,27 +11,18 @@ use Symfony\Component\Console\Output\OutputInterface;
 /**
  * @author Sergei Vizel <sergei.vizel@gmail.com>
  */
+#[AsCommand(
+    name: 'cravler:maxmind:geoip-update',
+    description: 'Downloads and updates the MaxMind GeoIp2 database',
+)]
 class UpdateDatabaseCommand extends Command
 {
-    protected static $defaultName = 'cravler:maxmind:geoip-update';
-    protected static $defaultDescription = 'Downloads and updates the MaxMind GeoIp2 database';
-
     /**
      * @param array<string, mixed> $config
      */
     public function __construct(private readonly array $config = [])
     {
         parent::__construct();
-    }
-
-    public static function getDefaultName(): ?string
-    {
-        return self::$defaultName;
-    }
-
-    public static function getDefaultDescription(): ?string
-    {
-        return self::$defaultDescription;
     }
 
     protected function configure(): void
