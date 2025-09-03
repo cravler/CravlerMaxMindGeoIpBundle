@@ -41,6 +41,8 @@ class UpdateDatabaseCommand extends Command
         /** @var array<string, ?string> $sources */
         $sources = \is_array($this->config['source'] ?? null) ? $this->config['source'] : [];
 
+        $exitCode = Command::SUCCESS;
+
         foreach ($sources as $key => $source) {
             if (!$source) {
                 continue;
@@ -53,6 +55,7 @@ class UpdateDatabaseCommand extends Command
             if (!$tmpFile) {
                 $output->writeln('FAILED');
                 $output->writeln(\sprintf('<error>Error during file download occurred on %s</error>', $source));
+                $exitCode = Command::FAILURE;
                 continue;
             }
 
@@ -77,6 +80,7 @@ class UpdateDatabaseCommand extends Command
                 $output->writeln('<info>Done</info>');
             } else {
                 $output->writeln(\sprintf('<error>An error occured when decompressing %s</error>', \basename($tmpFile)));
+                $exitCode = Command::FAILURE;
                 continue;
             }
 
@@ -89,10 +93,12 @@ class UpdateDatabaseCommand extends Command
                     if (!$expectedMD5 || 32 !== \strlen($expectedMD5)) {
                         \unlink($tmpFileUnzipped);
                         $output->writeln(\sprintf('<error>Unable to check MD5 for %s</error>', $source));
+                        $exitCode = Command::FAILURE;
                         continue;
                     } elseif ($expectedMD5 !== $calculatedMD5) {
                         \unlink($tmpFileUnzipped);
                         $output->writeln(\sprintf('<error>MD5 for %s does not match</error>', $source));
+                        $exitCode = Command::FAILURE;
                         continue;
                     } else {
                         $output->writeln('<info>File hash OK</info>');
@@ -116,11 +122,12 @@ class UpdateDatabaseCommand extends Command
                 $output->writeln(\sprintf('<info>Update completed for %s</info>', $key));
             } else {
                 $output->writeln(\sprintf('<error>Unable to update %s</error>', $key));
+                $exitCode = Command::FAILURE;
             }
         }
         $output->writeln('');
 
-        return 0;
+        return $exitCode;
     }
 
     private function downloadFile(string $source): ?string
